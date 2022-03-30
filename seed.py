@@ -8,7 +8,7 @@ db.create_all()
 # If table isn't empty, empty it
 User.query.delete()
 
-# Add pets
+# Add users
 eric = User(first_name='Eric', last_name='Sohng')
 maurice = User(first_name='Maurice', last_name='Baez')
 

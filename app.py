@@ -48,16 +48,34 @@ def process_and_add_new_user():
 
     new_user = User(first_name = first_name, last_name = last_name, image_url = image_url)
 
-# Add new object to session, so they'll persist
+    # Add new object to session, so they'll persist
     db.session.add(new_user)
 
-# Commit--otherwise, this never gets saved!
+    # Commit--otherwise, this never gets saved!
     db.session.commit()
 
     return redirect("/users")
 
 
-# @app.get("/users/<int:user_id>")
-# @app.get("/users/<int:user_id>/edit")
+@app.get("/users/<int:user_id>")
+def show_user_details(user_id):
+    """ Show profile page for user """
+
+    # grab user id object
+    user = User.query.get(user_id)
+
+    return render_template("user_detail_page.html", user = user)
+
+
+@app.get("/users/<int:user_id>/edit")
+def show_user_edit_page(user_id):
+    """ Show edit page for user """
+
+    user = User.query.get(user_id)
+
+    return render_template("user_edit_page.html", user = user)
+
+
+
 # @app.post("/users/<int:user_id>/edit")
 # @app.post("/users/<int:user_id>/delete")
