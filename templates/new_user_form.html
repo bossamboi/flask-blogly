@@ -2,6 +2,24 @@
 
 {% block title %} Create User {% endblock %}
 
-{% block content %} 
+{% block heading %}Create a User {% endblock %}
+
+{% block content %}
+
+<form action="/users/new" method="POST">
+  <label> First Name:
+    <input name="first-name" type="text">
+  </label>
+  <label> Last Name:
+    <input name="last-name" type="text">
+  </label>
+  <label> Image URL:
+    <input name="img-url" type="text">
+  </label>
+
+  <button>Add</button>
+  
+</form>
+
 
 {% endblock %}
