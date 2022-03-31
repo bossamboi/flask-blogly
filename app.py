@@ -89,6 +89,9 @@ def process_user_edit(user_id):
 
     user.first_name = first_name
     user.last_name = last_name
+
+    if image_url == "":
+        image_url = None
     user.image_url = image_url
 
     # user.edit_user(first_name, last_name, image_url)
