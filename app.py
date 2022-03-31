@@ -2,7 +2,7 @@
 
 from tabnanny import process_tokens
 from flask import Flask, request, redirect, render_template, flash
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, DEFAULT_IMAGE_URL
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -13,7 +13,6 @@ app.config['SECRET_KEY'] = 'secret-key'
 
 debug = DebugToolbarExtension(app)
 
-DEFAULT_IMAGE_URL = "https://merriam-webster.com/assets/mw/images/article/art-wap-article-main/egg-3442-e1f6463624338504cd021bf23aef8441@2x.jpg"
 
 
 connect_db(app)
@@ -127,7 +126,7 @@ def delete_user(user_id):
 
 
 
-# blog post routes
+# BLOG POST ROUTES
 
 @app.get("/users/<int:user_id>/posts/new")
 def show_new_post_form(user_id):

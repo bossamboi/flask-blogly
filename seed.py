@@ -25,5 +25,3 @@ db.session.add_all([post_1, post_2])
 
 # Commit--otherwise, this never gets saved!
 db.session.commit()
-
-

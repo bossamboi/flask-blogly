@@ -110,16 +110,14 @@ class PostViewTestCase(TestCase):
                                     content="test content here",
                                     user_id=test_user.id)
 
-        second_post =Post(title="test_post_two",
-                                    content="test more content", user_id=test_user.id)
-
         db.session.add(test_user)
-        db.session.add_all([test_post, second_post])
+        db.session.add(test_post)
 
         db.session.commit()
 
         self.post_id = test_post.id
         self.user_id = test_user.id
+        self.image_url = test_user.image_url
 
     def tearDown(self):
         """Clean up any fouled transaction."""
@@ -134,3 +132,26 @@ class PostViewTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('<form class="new-post-form', html)
+
+    def test_adding_new_post(self):
+        """ Test new post is created and redirects to user detail page """
+        with self.client as c:
+            resp = c.post(f"/users/{self.user_id}/posts/new", 
+                                data = {'title': 'Coding Rocks',
+                                                'content': 'I love coding'
+                                                },
+                                        follow_redirects = True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn(f'<img src="{self.image_url}', html)
+            self.assertIn("Coding Rocks", html)
+    
+    def test_post_detail_page(self):
+        """ Test that post detail page shows up """
+        with self.client as c:
+            resp = c.get(f"/posts/{self.post_id}")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('test content here', html)
