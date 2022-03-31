@@ -7,23 +7,23 @@
 {% block content %}
 
 <div>
-{{post.content}}
+    {{post.content}}
 </div>
 
 <div class="mb-3">
-By, {{post.user.first_name}} {{post.user.last_name}}
+    By, {{post.user.first_name}} {{post.user.last_name}}
 </div>
 
 <form action="/users/{{post.user_id}}">
-  <button class="btn btn-outline-primary">Cancel</button>
+    <button class="btn btn-outline-primary">Cancel</button>
 </form>
 
-<form action="/posts/{{post.id}}/edit" >
-  <button class="btn btn-primary">Edit</button>
+<form action="/posts/{{post.id}}/edit">
+    <button class="btn btn-primary">Edit</button>
 </form>
 
 <form action="/posts/{{post.id}}/delete" method="POST">
-  <button class="btn btn-danger">Delete</button>
+    <button class="btn btn-danger">Delete</button>
 </form>
 
 

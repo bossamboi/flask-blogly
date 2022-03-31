@@ -8,8 +8,15 @@
 <div>
     <img src="{{user.image_url}}" class="img-thumbnail profile-img">
     <h1>{{user.first_name}} {{user.last_name}} </h1>
-    <form action="/users/{{user.id}}/edit" method="GET"><button class="btn btn-primary">Edit</button></form>
-    <form action="/users/{{user.id}}/delete" method="POST"><button class="btn btn-danger">Delete</button></form>
+    <span class="btn-group">
+        <form action="/users/{{user.id}}/edit" method="GET">
+            <button class="btn btn-primary mx-1">Edit</button>
+        </form>
+        <form action="/users/{{user.id}}/delete" method="POST">
+            <button class="btn btn-danger mx-1">Delete</button>
+        </form>
+    </span>
+
 </div>
 
 <div>
@@ -20,7 +27,7 @@
         {% endfor %}
     </ul>
     <form action="/users/{{user.id}}/posts/new">
-        <button class="btn btn-primary">Add Post</button>
+        <button class="btn btn-primary mx-1">Add Post</button>
     </form>
 
 </div>

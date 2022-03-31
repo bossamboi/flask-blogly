@@ -1,6 +1,6 @@
 """Blogly application."""
 
-from tabnanny import process_tokens
+# from tabnanny import process_tokens
 from flask import Flask, request, redirect, render_template, flash
 from models import db, connect_db, User, Post, DEFAULT_IMAGE_URL
 from flask_debugtoolbar import DebugToolbarExtension
@@ -56,6 +56,8 @@ def process_and_add_new_user():
 
     db.session.commit()
 
+    flash('User created!')
+
     return redirect("/users")
 
 
@@ -97,12 +99,9 @@ def process_user_edit(user_id):
 
     user.image_url = image_url
 
-    # user.edit_user(first_name, last_name, image_url)
-
     db.session.add(user)
     db.session.commit()
 
-    # could add flash message for success edit
     flash("Profile successfully updated")
 
     return redirect(f"/users/{user_id}")
@@ -114,10 +113,7 @@ def delete_user(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    # user.query.delete()
-
     db.session.delete(user)
-
     db.session.commit()
 
     flash("User successfully deleted")
@@ -159,7 +155,7 @@ def show_post_detail(post_id):
 
     post = Post.query.get_or_404(post_id)
 
-    return render_template("post_detail_page.html", post=post)
+    return render_template("post_detail_page.html", post = post)
 
 
 @app.get("/posts/<int:post_id>/edit")
@@ -197,7 +193,6 @@ def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
 
     db.session.delete(post)
-
     db.session.commit()
 
     flash("Post removed")

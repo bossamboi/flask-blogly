@@ -6,25 +6,23 @@
 
 {% block content %}
 <form action="/users/{{user.id}}/edit" method="POST">
-    <label> First Name:
-      <input name="first-name-edit" type="text" value="{{user.first_name}}">
-    </label>
-    <label> Last Name:
-      <input name="last-name-edit" type="text" value="{{user.last_name}}">
-    </label>
-    <label> Image URL:
-      <input name="image-url-edit" type="text" value="{{user.image_url}}">
-    </label>
+  <label> First Name:
+    <input name="first-name-edit" type="text" value="{{user.first_name}}">
+  </label>
+  <label> Last Name:
+    <input name="last-name-edit" type="text" value="{{user.last_name}}">
+  </label>
+  <label> Image URL:
+    <input name="image-url-edit" type="text" value="{{user.image_url}}">
+  </label>
+
+  <button class="btn btn-primary">Save</button>
+</form>
 
 
-    <button class="btn btn-primary">Save</button>
-
-  </form>
-
-
-  <form action="/users/{{user.id}}">
-      <button class="btn btn-outline-primary">Cancel</button>
-    </form>
+<form action="/users/{{user.id}}">
+  <button class="btn btn-outline-primary">Cancel</button>
+</form>
 
 
 {% endblock %}

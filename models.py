@@ -16,7 +16,7 @@ def connect_db(app):
 
 
 class User(db.Model):
-    """User information with instance method to edit info"""
+    """User information"""
 
     __tablename__ = "users"
 
@@ -41,16 +41,8 @@ class User(db.Model):
         return f"<User {u.id} {u.first_name} {u.last_name} {u.image_url}>"
 
 
-    def edit_user(self, first_name, last_name, image_url):
-        """ Update a user's information in the database """
-
-        self.first_name = first_name
-        self.last_name = last_name
-        self.image_url = image_url
-
-
 class Post(db.Model):
-    """User information with instance method to edit info"""
+    """Post information"""
 
     __tablename__ = "posts"
 
@@ -68,7 +60,7 @@ class Post(db.Model):
 
 
     def __repr__(self):
-        """Return repr with user data"""
+        """Return repr with post data"""
         p = self
 
         return f"<Post {p.id} Author {p.user_id} {p.title} {p.created_at}>"

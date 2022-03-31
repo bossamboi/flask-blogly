@@ -7,21 +7,21 @@
 {% block content %}
 
 <form class="edit-post-form" action="/posts/{{post.id}}/edit" method="POST">
-  <label> Title:
-    <input name="title-edit" type="text" value="{{post.title}}">
-  </label>
-  <label> Post Content:
-    <textarea name="content-edit" type="text" >{{post.content}}</textarea>
-  </label>
+    <label> Title:
+        <input name="title-edit" type="text" value="{{post.title}}">
+    </label>
+    <label> Post Content:
+        <textarea name="content-edit" type="text">{{post.content}}</textarea>
+    </label>
 
 
 
-  <button class="btn btn-success">Edit</button>
+    <button class="btn btn-success">Edit</button>
 </form>
 
 
 <form action="/users/{{post.user_id}}">
     <button class="btn btn-secondary">Cancel</button>
-    </form>
+</form>
 
 {% endblock %}
