@@ -13,6 +13,9 @@ app.config['SECRET_KEY'] = 'secret-key'
 
 debug = DebugToolbarExtension(app)
 
+DEFAULT_IMAGE_URL = "https://merriam-webster.com/assets/mw/images/article/art-wap-article-main/egg-3442-e1f6463624338504cd021bf23aef8441@2x.jpg"
+
+
 connect_db(app)
 db.create_all()
 
@@ -91,7 +94,8 @@ def process_user_edit(user_id):
     user.last_name = last_name
 
     if image_url == "":
-        image_url = None
+        image_url = DEFAULT_IMAGE_URL
+
     user.image_url = image_url
 
     # user.edit_user(first_name, last_name, image_url)
@@ -100,6 +104,7 @@ def process_user_edit(user_id):
     db.session.commit()
 
     # could add flash message for success edit
+    flash("Profile successfully updated")
 
     return redirect(f"/users/{user_id}")
 
