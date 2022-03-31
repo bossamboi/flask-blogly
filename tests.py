@@ -133,10 +133,11 @@ class PostViewTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn('<form class="new-post-form', html)
 
+
     def test_adding_new_post(self):
         """ Test new post is created and redirects to user detail page """
         with self.client as c:
-            resp = c.post(f"/users/{self.user_id}/posts/new", 
+            resp = c.post(f"/users/{self.user_id}/posts/new",
                                 data = {'title': 'Coding Rocks',
                                                 'content': 'I love coding'
                                                 },
@@ -146,7 +147,7 @@ class PostViewTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn(f'<img src="{self.image_url}', html)
             self.assertIn("Coding Rocks", html)
-    
+
     def test_post_detail_page(self):
         """ Test that post detail page shows up """
         with self.client as c:
@@ -155,3 +156,18 @@ class PostViewTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('test content here', html)
+
+    def test_edit_post(self):
+        """ Test edit post functionality """
+
+        with self.client as c:
+            resp = c.post(f"/posts/{self.post_id}/edit",
+                                data = {"title-edit": "I love to code",
+                                "content-edit": "Isn't it the best"
+                                                },
+                                follow_redirects = True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("By, ", html)
+            self.assertIn("it the best", html)

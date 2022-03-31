@@ -120,7 +120,7 @@ def delete_user(user_id):
 
     db.session.commit()
 
-    # could add flash message for successful delete
+    flash("User successfully deleted")
 
     return redirect("/users")
 
@@ -148,6 +148,8 @@ def process_and_add_new_post(user_id):
 
     db.session.add(new_post)
     db.session.commit()
+
+    flash("Post successfully added")
 
     return redirect(f"/users/{user_id}")
 
