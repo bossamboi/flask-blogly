@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from tabnanny import process_tokens
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, flash
 from models import db, connect_db, User, Post
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -134,8 +134,6 @@ def show_new_post_form(user_id):
 def process_and_add_new_post(user_id):
     """ Process new post form, add post to database, redirect to user detail page """
 
-    # user = User.query.get_or_404(user_id)
-
     title = request.form.get("title")
     content = request.form.get("content")
 
@@ -145,3 +143,11 @@ def process_and_add_new_post(user_id):
     db.session.commit()
 
     return redirect(f"/users/{user_id}")
+
+@app.get("/posts/<int:post_id>")
+def show_post_detail(post_id):
+    """ Show post detail """
+
+    post = Post.query.get_or_404(post_id)
+
+    return render_template("post_detail_page.html", post=post)
