@@ -159,3 +159,32 @@ def show_post_detail(post_id):
     post = Post.query.get_or_404(post_id)
 
     return render_template("post_detail_page.html", post=post)
+
+
+@app.get("/posts/<int:post_id>/edit")
+def show_edit_post_form(post_id):
+    """ Show form to edit post """
+
+    post = Post.query.get_or_404(post_id)
+
+    return render_template("post_edit_page.html", post = post)
+
+
+@app.post("/posts/<int:post_id>/edit")
+def process_post_edit(post_id):
+    """ Process change data in post, update data base, redirect to post view"""
+
+    new_title = request.form.get("title-edit")
+    new_content = request.form.get("content-edit")
+
+    post = Post.query.get_or_404(post_id)
+
+    post.title = new_title
+    post.content = new_content
+
+    db.session.add(post)
+    db.session.commit()
+
+    flash("Post changes saved")
+
+    return redirect(f"/posts/{post_id}")
