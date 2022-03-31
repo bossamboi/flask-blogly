@@ -85,7 +85,7 @@ def process_user_edit(user_id):
     last_name = request.form.get("last-name-edit")
     image_url = request.form.get("image-url-edit")
 
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
 
     user.first_name = first_name
     user.last_name = last_name
@@ -105,7 +105,7 @@ def process_user_edit(user_id):
 def delete_user(user_id):
     """ Delete user and redirect to users list """
 
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
 
     # user.query.delete()
 
@@ -119,5 +119,29 @@ def delete_user(user_id):
 
 
 
+# blog post routes
+
+@app.get("/users/<int:user_id>/posts/new")
+def show_new_post_form(user_id):
+    """ Show new post form for user"""
+
+    user = User.query.get_or_404(user_id)
+
+    return render_template("new_post_form.html", user = user)
 
 
+@app.post("/users/<int:user_id>/posts/new")
+def process_and_add_new_post(user_id):
+    """ Process new post form, add post to database, redirect to user detail page """
+
+    # user = User.query.get_or_404(user_id)
+
+    title = request.form.get("title")
+    content = request.form.get("content")
+
+    new_post = Post(title = title, content = content, user_id = user_id)
+
+    db.session.add(new_post)
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
