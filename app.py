@@ -61,7 +61,7 @@ def show_user_details(user_id):
     """ Show profile page for user """
 
     # grab user id object
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
 
     return render_template("user_detail_page.html", user = user)
 
@@ -70,7 +70,7 @@ def show_user_details(user_id):
 def show_user_edit_page(user_id):
     """ Show edit page for user """
 
-    user = User.query.get(user_id)
+    user = User.query.get_or_404(user_id)
 
     return render_template("user_edit_page.html", user = user)
 
@@ -85,9 +85,16 @@ def process_user_edit(user_id):
 
     user = User.query.get(user_id)
 
-    user.edit_user(first_name, last_name, image_url)
+    user.first_name = first_name
+    user.last_name = last_name
+    user.image_url = image_url
 
+    # user.edit_user(first_name, last_name, image_url)
+
+    db.session.add(user)
     db.session.commit()
+
+    # could add flash message for success edit
 
     return redirect(f"/users/{user_id}")
 
@@ -98,9 +105,13 @@ def delete_user(user_id):
 
     user = User.query.get(user_id)
 
+    # user.query.delete()
+
     db.session.delete(user)
 
     db.session.commit()
+
+    # could add flash message for successful delete
 
     return redirect("/users")
 
