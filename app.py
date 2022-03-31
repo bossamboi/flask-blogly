@@ -1,7 +1,8 @@
 """Blogly application."""
 
+from tabnanny import process_tokens
 from flask import Flask, request, redirect, render_template
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -62,8 +63,9 @@ def show_user_details(user_id):
 
     # grab user id object
     user = User.query.get_or_404(user_id)
+    posts = user.posts
 
-    return render_template("user_detail_page.html", user = user)
+    return render_template("user_detail_page.html", user = user, posts=posts)
 
 
 @app.get("/users/<int:user_id>/edit")

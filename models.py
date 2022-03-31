@@ -1,6 +1,7 @@
 """Models for Blogly."""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -13,8 +14,6 @@ def connect_db(app):
     db.init_app(app)
 
 
-
-# need user model with id (pkey), first_name(not null), last_name(not null), image_url (have default img)]
 
 class User(db.Model):
     """User information with instance method to edit info"""
@@ -32,6 +31,10 @@ class User(db.Model):
                             nullable = False,
                             default = DEFAULT_IMAGE_URL)
 
+
+    posts = db.relationship('Post',
+                            backref='user')
+
     def __repr__(self):
         """Return repr with user data"""
         u = self
@@ -47,4 +50,27 @@ class User(db.Model):
         self.image_url = image_url
 
 
+class Post(db.Model):
+    """User information with instance method to edit info"""
+
+    __tablename__ = "posts"
+
+    id = db.Column(db.Integer,
+                    primary_key = True,
+                    autoincrement = True)
+    title = db.Column(db.String(50),
+                            nullable = False)
+    content = db.Column(db.String,
+                            nullable = False)
+    created_at = db.Column(db.DateTime, nullable = False,
+        default = datetime.utcnow)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("users.id"))
+
+
+    def __repr__(self):
+        """Return repr with user data"""
+        p = self
+
+        return f"<Post {p.id} Author {p.user_id} {p.title} {p.created_at}>"
 
