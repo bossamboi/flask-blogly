@@ -14,12 +14,10 @@
         <textarea name="content-edit" type="text">{{post.content}}</textarea>
     </label>
 
-
-
     <button class="btn btn-success">Edit</button>
 </form>
 
-
+<!-- doesn't need to be form. make <a></a> -->
 <form action="/users/{{post.user_id}}">
     <button class="btn btn-secondary">Cancel</button>
 </form>

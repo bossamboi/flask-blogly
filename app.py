@@ -16,6 +16,7 @@ debug = DebugToolbarExtension(app)
 
 
 connect_db(app)
+db.drop_all()
 db.create_all()
 
 
@@ -87,15 +88,12 @@ def process_user_edit(user_id):
 
     first_name = request.form.get("first-name-edit")
     last_name = request.form.get("last-name-edit")
-    image_url = request.form.get("image-url-edit")
+    image_url = request.form.get("image-url-edit") or DEFAULT_IMAGE_URL
 
     user = User.query.get_or_404(user_id)
 
     user.first_name = first_name
     user.last_name = last_name
-
-    if image_url == "":
-        image_url = DEFAULT_IMAGE_URL
 
     user.image_url = image_url
 
@@ -112,6 +110,9 @@ def delete_user(user_id):
     """ Delete user and redirect to users list """
 
     user = User.query.get_or_404(user_id)
+
+    for post in user.posts:
+        db.session.delete(post)
 
     db.session.delete(user)
     db.session.commit()
@@ -130,7 +131,7 @@ def show_new_post_form(user_id):
 
     user = User.query.get_or_404(user_id)
 
-    return render_template("new_post_form.html", user = user)
+    return render_template("new_post_form.html", user=user)
 
 
 @app.post("/users/<int:user_id>/posts/new")
@@ -140,7 +141,7 @@ def process_and_add_new_post(user_id):
     title = request.form.get("title")
     content = request.form.get("content")
 
-    new_post = Post(title = title, content = content, user_id = user_id)
+    new_post = Post(title = title, content=content, user_id=user_id)
 
     db.session.add(new_post)
     db.session.commit()
@@ -155,7 +156,7 @@ def show_post_detail(post_id):
 
     post = Post.query.get_or_404(post_id)
 
-    return render_template("post_detail_page.html", post = post)
+    return render_template("post_detail_page.html", post=post)
 
 
 @app.get("/posts/<int:post_id>/edit")
@@ -164,7 +165,7 @@ def show_edit_post_form(post_id):
 
     post = Post.query.get_or_404(post_id)
 
-    return render_template("post_edit_page.html", post = post)
+    return render_template("post_edit_page.html", post=post)
 
 
 @app.post("/posts/<int:post_id>/edit")

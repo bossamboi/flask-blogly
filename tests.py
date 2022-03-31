@@ -169,3 +169,4 @@ class PostViewTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn("By, ", html)
             self.assertIn("it the best", html)
+            self.assertNotIn("test content here", html) #old content
