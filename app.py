@@ -51,7 +51,6 @@ def process_and_add_new_user():
     # Add new object to session, so they'll persist
     db.session.add(new_user)
 
-    # Commit--otherwise, this never gets saved!
     db.session.commit()
 
     return redirect("/users")
@@ -76,6 +75,36 @@ def show_user_edit_page(user_id):
     return render_template("user_edit_page.html", user = user)
 
 
+@app.post("/users/<int:user_id>/edit")
+def process_user_edit(user_id):
+    """ Update database with user edits and return user to user's profile """
 
-# @app.post("/users/<int:user_id>/edit")
-# @app.post("/users/<int:user_id>/delete")
+    first_name = request.form.get("first-name-edit")
+    last_name = request.form.get("last-name-edit")
+    image_url = request.form.get("image-url-edit")
+
+    user = User.query.get(user_id)
+
+    user.edit_user(first_name, last_name, image_url)
+
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
+
+
+@app.post("/users/<int:user_id>/delete")
+def delete_user(user_id):
+    """ Delete user """
+
+    user = User.query.get(user_id)
+
+    db.session.delete(user)
+
+    db.session.commit()
+
+    return redirect("/users")
+
+
+
+
+
