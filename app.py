@@ -40,7 +40,7 @@ def show_new_user_form():
 
 @app.post("/users/new")
 def process_and_add_new_user():
-    """ Process form and add new user to database """
+    """ Process form and add new user to database. Redirect to users list """
 
     first_name = request.form.get("first-name")
     last_name = request.form.get("last-name")
@@ -94,7 +94,7 @@ def process_user_edit(user_id):
 
 @app.post("/users/<int:user_id>/delete")
 def delete_user(user_id):
-    """ Delete user """
+    """ Delete user and redirect to users list """
 
     user = User.query.get(user_id)
 

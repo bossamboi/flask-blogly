@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+DEFAULT_IMAGE_URL = "https://merriam-webster.com/assets/mw/images/article/art-wap-article-main/egg-3442-e1f6463624338504cd021bf23aef8441@2x.jpg"
 
 def connect_db(app):
     """Connect to database."""
@@ -16,7 +17,7 @@ def connect_db(app):
 # need user model with id (pkey), first_name(not null), last_name(not null), image_url (have default img)]
 
 class User(db.Model):
-    """User Info (fill out later)"""
+    """User information with instance method to edit info"""
 
     __tablename__ = "users"
 
@@ -29,10 +30,10 @@ class User(db.Model):
                             nullable = False)
     image_url = db.Column(db.String,
                             nullable = False,
-                            default = "https://merriam-webster.com/assets/mw/images/article/art-wap-article-main/egg-3442-e1f6463624338504cd021bf23aef8441@2x.jpg")
+                            default = DEFAULT_IMAGE_URL)
 
     def __repr__(self):
-
+        """Return repr with user data"""
         u = self
 
         return f"<User {u.id} {u.first_name} {u.last_name} {u.image_url}>"

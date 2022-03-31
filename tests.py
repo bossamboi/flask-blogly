@@ -52,9 +52,40 @@ class UserViewTestCase(TestCase):
         db.session.rollback()
 
     def test_list_users(self):
+        """Test that user list shows up with users from database"""
         with self.client as c:
             resp = c.get("/users")
             self.assertEqual(resp.status_code, 200)
             html = resp.get_data(as_text=True)
             self.assertIn("test_first", html)
             self.assertIn("test_last", html)
+    
+    def test_new_user_form(self):
+        """Test that new user form shows up"""
+        with self.client as c:
+            resp = c.get("/users/new")
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn('<form class="new-user-form', html)
+
+
+    def test_new_user_submit(self):
+        """Test that new user is added to db and page redirects"""
+        with self.client as c:
+            resp = c.post("/users/new", data = {'first-name': 'Jon',
+                                                'last-name': 'Snow'
+                                                },
+                                        follow_redirects = True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('Jon', html)
+    
+    def test_show_detail_page(self):
+        """Test that user detail page shows up"""
+        with self.client as c:
+            resp = c.get(f"/users/{self.user_id}")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('test_first', html)
