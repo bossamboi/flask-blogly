@@ -188,3 +188,17 @@ def process_post_edit(post_id):
     flash("Post changes saved")
 
     return redirect(f"/posts/{post_id}")
+
+@app.post("/posts/<int:post_id>/delete")
+def delete_post(post_id):
+    """ Delete post from database """
+
+    post = Post.query.get_or_404(post_id)
+
+    db.session.delete(post)
+
+    db.session.commit()
+
+    flash("Post removed")
+
+    return redirect(f"/users/{post.user_id}")

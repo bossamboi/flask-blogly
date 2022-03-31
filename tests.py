@@ -1,7 +1,8 @@
+from pydoc import HTMLRepr
 from unittest import TestCase
 
 from app import app, db
-from models import DEFAULT_IMAGE_URL, User
+from models import DEFAULT_IMAGE_URL, User, Post
 
 # Let's configure our app to use a different database for tests
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogly_test"
@@ -59,7 +60,7 @@ class UserViewTestCase(TestCase):
             html = resp.get_data(as_text=True)
             self.assertIn("test_first", html)
             self.assertIn("test_last", html)
-    
+
     def test_new_user_form(self):
         """Test that new user form shows up"""
         with self.client as c:
@@ -80,7 +81,7 @@ class UserViewTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Jon', html)
-    
+
     def test_show_detail_page(self):
         """Test that user detail page shows up"""
         with self.client as c:
@@ -89,3 +90,47 @@ class UserViewTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('test_first', html)
+
+class PostViewTestCase(TestCase):
+    """Test views for posts."""
+
+    def setUp(self):
+        """Create test client, add sample data."""
+
+        Post.query.delete()
+        User.query.delete()
+
+        self.client = app.test_client()
+
+        test_user = User(first_name="test_first",
+                                    last_name="test_last",
+                                    image_url=None)
+
+        test_post = Post(title="test_post",
+                                    content="test content here",
+                                    user_id=test_user.id)
+
+        second_post =Post(title="test_post_two",
+                                    content="test more content", user_id=test_user.id)
+
+        db.session.add(test_user)
+        db.session.add_all([test_post, second_post])
+
+        db.session.commit()
+
+        self.post_id = test_post.id
+        self.user_id = test_user.id
+
+    def tearDown(self):
+        """Clean up any fouled transaction."""
+        db.session.rollback()
+
+    def test_new_post_form(self):
+        """ Test new post form is loaded """
+
+        with self.client as c:
+            resp = c.get(f"/users/{self.user_id}/posts/new")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('<form class="new-post-form', html)
