@@ -199,3 +199,15 @@ def delete_post(post_id):
     flash("Post removed")
 
     return redirect(f"/users/{post.user_id}")
+
+
+
+# TAG ROUTES
+
+@app.get("/tags")
+def show_tags():
+    return render_template("tags_list.html")
+
+@app.get("/tags/new")
+def show_new_tag_form():
+    return render_template("new_tag_form.html")
