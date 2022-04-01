@@ -2,7 +2,7 @@
 
 # from tabnanny import process_tokens
 from flask import Flask, request, redirect, render_template, flash
-from models import db, connect_db, User, Post, DEFAULT_IMAGE_URL
+from models import db, connect_db, User, Post, Tag, PostTag, DEFAULT_IMAGE_URL
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -16,7 +16,6 @@ debug = DebugToolbarExtension(app)
 
 
 connect_db(app)
-db.drop_all()
 db.create_all()
 
 
@@ -206,12 +205,38 @@ def delete_post(post_id):
 
 @app.get("/tags")
 def show_tags():
-    return render_template("tags_list.html")
+    """Show tag list"""
+
+    tags = Tag.query.all()
+    return render_template("tags_list.html", tags=tags)
+
+@app.get("/tags/<int:tag_id>")
+def show_tag_details(tag_id):
+    """ Show detail page for a tag """
+
+    tag = Tag.query.get_or_404(tag_id)
+
+    return render_template("tag_details.html", tag=tag)
 
 @app.get("/tags/new")
 def show_new_tag_form():
+    """ Show new tag form"""
     return render_template("new_tag_form.html")
 
 @app.post("/tags/new")
 def process_new_tag_submit():
+    """ Process adding of new tag. Redirect to tag list"""
     name = request.form.get("tag-name")
+    tag = Tag(name = name)
+
+    db.session.add(tag)
+    db.session.commit()
+    return redirect("/tags")
+
+@app.get("/tags/<int:tag_id>/edit")
+def show_tag_edit_form(tag_id):
+    """ Show tag editing form """
+
+    tag = Tag.query.get_or_404(tag_id)
+
+    return render_template("edit_tag.html", tag=tag)
