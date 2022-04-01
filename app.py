@@ -129,8 +129,9 @@ def show_new_post_form(user_id):
     """ Show new post form for user"""
 
     user = User.query.get_or_404(user_id)
+    tags = Tag.query.all()
 
-    return render_template("new_post_form.html", user=user)
+    return render_template("new_post_form.html", user=user, tags=tags)
 
 
 @app.post("/users/<int:user_id>/posts/new")
@@ -140,9 +141,20 @@ def process_and_add_new_post(user_id):
     title = request.form.get("title")
     content = request.form.get("content")
 
+    tag_names = request.form.getlist("tag-name")
+
     new_post = Post(title = title, content=content, user_id=user_id)
 
     db.session.add(new_post)
+    db.session.commit()
+
+    for tag_name in tag_names:
+
+        tag = Tag.query.filter_by(name=tag_name).one()
+
+        posttag = PostTag(post_id=new_post.id ,tag_id=tag.id)
+        db.session.add(posttag)
+
     db.session.commit()
 
     flash("Post successfully added")
@@ -163,8 +175,10 @@ def show_edit_post_form(post_id):
     """ Show form to edit post """
 
     post = Post.query.get_or_404(post_id)
+    tags = Tag.query.all()
 
-    return render_template("post_edit_page.html", post=post)
+
+    return render_template("post_edit_page.html", post=post, tags=tags)
 
 
 @app.post("/posts/<int:post_id>/edit")
@@ -174,12 +188,31 @@ def process_post_edit(post_id):
     new_title = request.form.get("title-edit")
     new_content = request.form.get("content-edit")
 
+    tag_names = request.form.getlist("tag-name")
+
     post = Post.query.get_or_404(post_id)
 
     post.title = new_title
     post.content = new_content
 
     db.session.add(post)
+    db.session.commit()
+
+
+    posttags = PostTag.query.filter(PostTag.post_id == post.id)
+
+    for posttag in posttags:
+        db.session.delete(posttag)
+
+    db.session.commit()
+
+    for tag_name in tag_names:
+
+        tag = Tag.query.filter_by(name=tag_name).one()
+
+        posttag = PostTag(post_id=post.id ,tag_id=tag.id)
+        db.session.add(posttag)
+
     db.session.commit()
 
     flash("Post changes saved")
@@ -240,3 +273,29 @@ def show_tag_edit_form(tag_id):
     tag = Tag.query.get_or_404(tag_id)
 
     return render_template("edit_tag.html", tag=tag)
+
+
+@app.post("/tags/<int:tag_id>/edit")
+def process_tag_edit(tag_id):
+    """ process tag edits and redirect to tag detail page """
+
+    tag = Tag.query.get_or_404(tag_id)
+    tag_name = request.form.get("tag-name-edit")
+
+    tag.name = tag_name
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect(f"/tags/{tag_id}")
+
+@app.post("/tags/<int:tag_id>/delete")
+def delete_tag(tag_id):
+    """ Delete a tag """
+
+    tag = Tag.query.get_or_404(tag_id)
+
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect("/tags")

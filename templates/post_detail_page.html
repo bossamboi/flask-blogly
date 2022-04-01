@@ -14,6 +14,12 @@
     By, {{post.user.first_name}} {{post.user.last_name}}
 </div>
 
+<span>Tags:
+  {% for tag in post.tags %}
+  <a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm">{{tag.name}}</a>
+  {% endfor %}
+</span>
+
 <!-- doesn't need to be form. make <a></a> -->
 <form action="/users/{{post.user_id}}">
     <button class="btn btn-outline-primary">Cancel</button>

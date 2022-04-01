@@ -15,6 +15,13 @@
     </label>
 
     <button class="btn btn-success">Add</button>
+
+    {% for tag in tags %}
+    <label>
+        <input type="checkbox" name="tag-name" value="{{tag.name}}">
+        {{tag.name}}
+    </label>
+    {% endfor %}
 </form>
 
 <!-- could be <a> tag and shift into form above-->

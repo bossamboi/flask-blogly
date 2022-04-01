@@ -15,6 +15,14 @@
     </label>
 
     <button class="btn btn-success">Edit</button>
+
+    {% for tag in tags %}
+    <label>
+        <input type="checkbox" name="tag-name" value="{{tag.name}}">
+        {{tag.name}}
+    </label>
+    {% endfor %}
+    
 </form>
 
 <!-- doesn't need to be form. make <a></a> -->
