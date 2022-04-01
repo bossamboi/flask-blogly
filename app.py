@@ -211,3 +211,7 @@ def show_tags():
 @app.get("/tags/new")
 def show_new_tag_form():
     return render_template("new_tag_form.html")
+
+@app.post("/tags/new")
+def process_new_tag_submit():
+    name = request.form.get("tag-name")
